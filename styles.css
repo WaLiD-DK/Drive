@@ -1,3 +1,9 @@
+:root {
+    --box-width: 630px;
+    --box-height: 448px;
+    --box-aspect-ratio: 0.711; /* 448 / 630 */
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -23,8 +29,8 @@ body {
 
 /* Jewelry Box - Scaled to 630px × 448px (40% increase from 450px × 320px) */
 .jewelry-box {
-    width: 630px;
-    height: 448px;
+    width: var(--box-width);
+    height: var(--box-height);
     margin: 0 auto;
     position: relative;
     background: linear-gradient(145deg, #6b3410 0%, #4a2408 50%, #2d1505 100%);
@@ -361,9 +367,9 @@ body {
 @media (max-width: 768px) {
     .jewelry-box {
         width: 90vw;
-        height: calc(90vw * 0.711); /* Maintain 630:448 aspect ratio */
-        max-width: 630px;
-        max-height: 448px;
+        height: calc(90vw * var(--box-aspect-ratio)); /* Maintain aspect ratio */
+        max-width: var(--box-width);
+        max-height: var(--box-height);
     }
     
     .box-interior {

@@ -24,6 +24,8 @@ const SNAP_UPDATE_DELAY = 300;
 const PULSE_DURATION = 600;
 const PING_DURATION = 1000;
 const SCROLL_THROTTLE_DELAY = 150;
+const BOX_WIDTH = 630;
+const BOX_HEIGHT = 448;
 
 // Initialize on DOM load
 document.addEventListener('DOMContentLoaded', () => {
@@ -46,8 +48,8 @@ function initializeParticles() {
     const ctx = canvas.getContext('2d');
     const box = document.querySelector('.jewelry-box');
     
-    canvas.width = 630;
-    canvas.height = 448;
+    canvas.width = BOX_WIDTH;
+    canvas.height = BOX_HEIGHT;
     
     const particles = [];
     const particleCount = 50;
