@@ -16,6 +16,12 @@ const VELOCITY_MULTIPLIER = 0.95;
 const MIN_VELOCITY = 0.5;
 const RUBBER_BAND_RESISTANCE = 0.3;
 const TOOLTIP_DELAY = 500;
+const FPS_NORMALIZATION = 16;
+const INITIALIZATION_DELAY = 100;
+const SNAP_UPDATE_DELAY = 300;
+const PULSE_DURATION = 600;
+const PING_DURATION = 1000;
+const SCROLL_THROTTLE_DELAY = 150;
 
 // Initialize on DOM load
 document.addEventListener('DOMContentLoaded', () => {
@@ -29,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.jewelry-column').forEach(column => {
             selectMiddleItemAsFallback(column);
         });
-    }, 100);
+    }, INITIALIZATION_DELAY);
 });
 
 // Particle system for visual effects
@@ -111,7 +117,7 @@ function initializeColumns() {
             scrollTimeout = setTimeout(() => {
                 container.classList.remove('scrolling');
                 updateActiveItem(column);
-            }, 150);
+            }, SCROLL_THROTTLE_DELAY);
             
             updateActiveItem(column);
         });
@@ -165,7 +171,7 @@ function handleDragMove(e) {
     // Calculate velocity
     if (timeDelta > 0) {
         const moveDelta = lastDragY - clientY;
-        velocity = moveDelta / timeDelta * 16; // Normalize to 60fps
+        velocity = moveDelta / timeDelta * FPS_NORMALIZATION; // Normalize to 60fps
     }
     
     lastDragY = clientY;
@@ -288,7 +294,7 @@ function snapToItem(column) {
             });
             
             // Update active state after snap
-            setTimeout(() => updateActiveItem(column), 300);
+            setTimeout(() => updateActiveItem(column), SNAP_UPDATE_DELAY);
         }
     } catch (error) {
         console.error('Error in snapToItem:', error);
@@ -352,7 +358,7 @@ function selectItem(item, column) {
         
         // Add pulse animation
         item.classList.add('pulse');
-        setTimeout(() => item.classList.remove('pulse'), 600);
+        setTimeout(() => item.classList.remove('pulse'), PULSE_DURATION);
         
         // Add ping animation effect
         const pingElement = item.cloneNode(true);
@@ -360,7 +366,7 @@ function selectItem(item, column) {
         pingElement.style.position = 'absolute';
         pingElement.style.pointerEvents = 'none';
         item.parentElement.appendChild(pingElement);
-        setTimeout(() => pingElement.remove(), 1000);
+        setTimeout(() => pingElement.remove(), PING_DURATION);
         
         // Update selection
         item.classList.add('selected');
