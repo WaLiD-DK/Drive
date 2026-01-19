@@ -23,6 +23,61 @@
             font-family: 'Cormorant Garamond', serif;
             padding: 20px;
             overflow-x: hidden;
+            perspective: 1000px;
+        }
+
+        /* Opening Animation Styles */
+        .opening-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a0a2e 0%, #16213e 50%, #0f0f23 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.8s ease;
+        }
+
+        .opening-overlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .opening-text {
+            font-family: 'Playfair Display', serif;
+            color: #d4af37;
+            font-size: 2rem;
+            letter-spacing: 5px;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+            animation-delay: 0.5s;
+        }
+
+        .opening-subtext {
+            font-family: 'Cormorant Garamond', serif;
+            color: #f0ebe0;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            margin-top: 15px;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+            animation-delay: 1.2s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         h1 {
@@ -33,6 +88,20 @@
             text-align: center;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             letter-spacing: 3px;
+            opacity: 0;
+            transform: translateY(-30px);
+            transition: all 0.8s ease;
+        }
+
+        h1.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .jewelry-box-container {
+            position: relative;
+            perspective: 1500px;
+            transform-style: preserve-3d;
         }
 
         .jewelry-box {
@@ -47,6 +116,14 @@
             position: relative;
             max-width: 900px;
             width: 100%;
+            opacity: 0;
+            transform: scale(0.8) rotateX(10deg);
+            transition: all 1s ease;
+        }
+
+        .jewelry-box.animate-in {
+            opacity: 1;
+            transform: scale(1) rotateX(0deg);
         }
 
         .jewelry-box::before {
@@ -61,16 +138,59 @@
             pointer-events: none;
         }
 
+        /* Animated Lid */
+        .box-lid {
+            position: absolute;
+            top: -5px;
+            left: -3px;
+            right: -3px;
+            height: 100%;
+            background: linear-gradient(145deg, #3d2817 0%, #2c1810 50%, #1a0f0a 100%);
+            border-radius: 20px 20px 0 0;
+            border: 3px solid #4a3020;
+            transform-origin: top center;
+            transform: rotateX(0deg);
+            transition: transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 100;
+            box-shadow: 
+                0 15px 40px rgba(0,0,0,0.5),
+                inset 0 2px 4px rgba(255,255,255,0.1);
+        }
+
+        .box-lid.open {
+            transform: rotateX(-135deg);
+        }
+
+        .box-lid-inner {
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            right: 10px;
+            height: 60%;
+            background: linear-gradient(180deg, #8b0000 0%, #5c0000 100%);
+            border-radius: 10px 10px 0 0;
+            box-shadow: inset 0 5px 15px rgba(0,0,0,0.3);
+        }
+
         .box-lid-detail {
             position: absolute;
-            top: -15px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 30px;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 40px;
             background: linear-gradient(180deg, #d4af37 0%, #b8860b 100%);
-            border-radius: 5px 5px 0 0;
-            box-shadow: 0 -5px 15px rgba(212, 175, 55, 0.3);
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .box-lid-detail::after {
+            content: '♦';
+            color: #1a0f0a;
+            font-size: 1.5rem;
         }
 
         .cotton-cushion {
@@ -99,12 +219,27 @@
                     rgba(200,190,175,0.2) 2px,
                     rgba(200,190,175,0.2) 4px
                 );
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            transition-delay: 1s;
+        }
+
+        .cotton-cushion.animate-in {
+            opacity: 1;
         }
 
         .slot-container {
             display: flex;
             flex-direction: column;
             align-items: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .slot-container.animate-in {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .slot-label {
@@ -221,6 +356,14 @@
         .confirm-section {
             margin-top: 40px;
             text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .confirm-section.animate-in {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .confirm-btn {
@@ -253,14 +396,165 @@
             transform: translateY(-1px);
         }
 
+        /* Closing Animation Overlay */
+        .closing-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a0a2e 0%, #16213e 50%, #0f0f23 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+
+        .closing-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .closing-box {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .closing-box-base {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(145deg, #2c1810 0%, #1a0f0a 50%, #0d0805 100%);
+            border-radius: 10px;
+            border: 2px solid #3d2817;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        }
+
+        .closing-box-lid {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(145deg, #3d2817 0%, #2c1810 50%, #1a0f0a 100%);
+            border-radius: 10px 10px 0 0;
+            border: 2px solid #4a3020;
+            transform-origin: bottom center;
+            transform: rotateX(-90deg);
+            transition: transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
+        }
+
+        .closing-box-lid.close {
+            transform: rotateX(0deg);
+        }
+
+        .closing-box-lid .box-lid-detail {
+            top: 50%;
+            width: 60px;
+            height: 30px;
+        }
+
+        .gift-ribbon {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            transition-delay: 1.5s;
+        }
+
+        .gift-ribbon.show {
+            opacity: 1;
+        }
+
+        .ribbon-vertical {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 250px;
+            background: linear-gradient(90deg, #d4af37 0%, #f4d03f 50%, #d4af37 100%);
+            top: 0;
+        }
+
+        .ribbon-horizontal {
+            position: absolute;
+            top: 100px;
+            left: -20px;
+            width: 340px;
+            height: 30px;
+            background: linear-gradient(180deg, #d4af37 0%, #f4d03f 50%, #d4af37 100%);
+        }
+
+        .ribbon-bow {
+            position: absolute;
+            top: 75px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4rem;
+            color: #d4af37;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+
+        .closing-message {
+            font-family: 'Playfair Display', serif;
+            color: #d4af37;
+            font-size: 1.8rem;
+            letter-spacing: 3px;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.8s ease;
+        }
+
+        .closing-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #d4af37;
+            border-radius: 50%;
+            opacity: 0;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
         .selection-display {
-            margin-top: 30px;
+            margin-top: 50px;
             background: rgba(255,255,255,0.05);
             border-radius: 15px;
             padding: 25px;
             border: 1px solid rgba(212, 175, 55, 0.2);
-            max-width: 900px;
-            width: 100%;
+            max-width: 700px;
+            width: 90%;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .selection-display.show {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .selection-title {
@@ -269,12 +563,13 @@
             font-size: 1.3rem;
             margin-bottom: 20px;
             letter-spacing: 2px;
+            text-align: center;
         }
 
         .selected-items {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 20px;
             flex-wrap: wrap;
         }
 
@@ -284,43 +579,84 @@
             padding: 15px;
             text-align: center;
             border: 1px solid rgba(212, 175, 55, 0.15);
-            min-width: 150px;
+            min-width: 140px;
             transition: all 0.3s ease;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .selected-item-card.show {
+            opacity: 1;
+            transform: scale(1);
         }
 
         .selected-item-card:hover {
             background: rgba(255,255,255,0.12);
             border-color: rgba(212, 175, 55, 0.3);
+            transform: scale(1.05);
         }
 
         .selected-item-card img {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             object-fit: contain;
             margin-bottom: 10px;
             filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
         }
 
-        .selected-item-card .item-name {
+        .selected-item-card .card-name {
             color: #f0ebe0;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             margin-bottom: 5px;
+            font-family: 'Playfair Display', serif;
         }
 
-        .selected-item-card .item-price {
+        .selected-item-card .card-price {
             color: #d4af37;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
 
         .total-price {
-            margin-top: 20px;
+            margin-top: 25px;
             font-family: 'Playfair Display', serif;
             color: #d4af37;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .total-price.show {
+            opacity: 1;
         }
 
         .total-price span {
             color: #f0ebe0;
+        }
+
+        .restart-btn {
+            margin-top: 30px;
+            background: transparent;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 12px 35px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .restart-btn.show {
+            opacity: 1;
+        }
+
+        .restart-btn:hover {
+            background: #d4af37;
+            color: #1a0a2e;
         }
 
         @media (max-width: 768px) {
@@ -344,6 +680,12 @@
 
             .jewelry-box {
                 padding: 30px 25px;
+            }
+
+            .closing-message {
+                font-size: 1.3rem;
+                text-align: center;
+                padding: 0 20px;
             }
         }
 
@@ -374,50 +716,81 @@
     </style>
 </head>
 <body>
-    <h1>✦ Luxury Jewelry Collection ✦</h1>
+    <!-- Opening Animation Overlay -->
+    <div class="opening-overlay" id="opening-overlay">
+        <div class="opening-text">✦ Welcome to Luxury ✦</div>
+        <div class="opening-subtext">Discover Your Perfect Jewelry</div>
+    </div>
 
-    <div class="jewelry-box">
-        <div class="box-lid-detail"></div>
-        <div class="cotton-cushion">
-            <div class="slot-container">
-                <div class="slot-label">Bracelet 1</div>
-                <div class="slot" id="slot-bracelet1" data-type="bracelet">
-                    <div class="slot-track"></div>
-                    <div class="slot-overlay"></div>
-                </div>
+    <h1 id="main-title">✦ Luxury Jewelry Collection ✦</h1>
+
+    <div class="jewelry-box-container">
+        <div class="jewelry-box" id="jewelry-box">
+            <!-- Animated Lid -->
+            <div class="box-lid" id="box-lid">
+                <div class="box-lid-inner"></div>
+                <div class="box-lid-detail"></div>
             </div>
-            <div class="slot-container">
-                <div class="slot-label">Necklace 1</div>
-                <div class="slot" id="slot-necklace1" data-type="necklace">
-                    <div class="slot-track"></div>
-                    <div class="slot-overlay"></div>
+
+            <div class="cotton-cushion" id="cotton-cushion">
+                <div class="slot-container" id="slot-container-1">
+                    <div class="slot-label">Bracelet 1</div>
+                    <div class="slot" id="slot-bracelet1" data-type="bracelet">
+                        <div class="slot-track"></div>
+                        <div class="slot-overlay"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="slot-container">
-                <div class="slot-label">Bracelet 2</div>
-                <div class="slot" id="slot-bracelet2" data-type="bracelet">
-                    <div class="slot-track"></div>
-                    <div class="slot-overlay"></div>
+                <div class="slot-container" id="slot-container-2">
+                    <div class="slot-label">Necklace 1</div>
+                    <div class="slot" id="slot-necklace1" data-type="necklace">
+                        <div class="slot-track"></div>
+                        <div class="slot-overlay"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="slot-container">
-                <div class="slot-label">Necklace 2</div>
-                <div class="slot" id="slot-necklace2" data-type="necklace">
-                    <div class="slot-track"></div>
-                    <div class="slot-overlay"></div>
+                <div class="slot-container" id="slot-container-3">
+                    <div class="slot-label">Bracelet 2</div>
+                    <div class="slot" id="slot-bracelet2" data-type="bracelet">
+                        <div class="slot-track"></div>
+                        <div class="slot-overlay"></div>
+                    </div>
+                </div>
+                <div class="slot-container" id="slot-container-4">
+                    <div class="slot-label">Necklace 2</div>
+                    <div class="slot" id="slot-necklace2" data-type="necklace">
+                        <div class="slot-track"></div>
+                        <div class="slot-overlay"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="confirm-section">
+    <div class="confirm-section" id="confirm-section">
         <button class="confirm-btn" onclick="confirmSelection()">✦ Confirm Selection ✦</button>
     </div>
 
-    <div class="selection-display" id="selection-display" style="display: none;">
-        <div class="selection-title">Your Selected Pieces</div>
-        <div class="selected-items" id="selected-items"></div>
-        <div class="total-price">Total: <span id="total-price">$0</span></div>
+    <!-- Closing Animation Overlay -->
+    <div class="closing-overlay" id="closing-overlay">
+        <div class="closing-message" id="closing-message">✦ Your Selection is Complete ✦</div>
+        
+        <div class="closing-box" id="closing-box">
+            <div class="closing-box-base"></div>
+            <div class="closing-box-lid" id="closing-lid">
+                <div class="box-lid-detail"></div>
+            </div>
+            <div class="gift-ribbon" id="gift-ribbon">
+                <div class="ribbon-vertical"></div>
+                <div class="ribbon-horizontal"></div>
+                <div class="ribbon-bow">🎀</div>
+            </div>
+        </div>
+
+        <div class="selection-display" id="final-selection">
+            <div class="selection-title">Your Exquisite Collection</div>
+            <div class="selected-items" id="selected-items"></div>
+            <div class="total-price" id="total-price">Total: <span>$0</span></div>
+            <button class="restart-btn" id="restart-btn" onclick="restartExperience()">✦ Select Again ✦</button>
+        </div>
     </div>
 
     <script>
@@ -440,11 +813,56 @@
         const slots = {};
         const itemHeight = 93.33;
 
+        // Opening Animation Sequence
+        function playOpeningAnimation() {
+            setTimeout(() => {
+                document.getElementById('opening-overlay').classList.add('fade-out');
+            }, 3000);
+
+            setTimeout(() => {
+                document.getElementById('main-title').classList.add('animate-in');
+            }, 3500);
+
+            setTimeout(() => {
+                document.getElementById('jewelry-box').classList.add('animate-in');
+            }, 4000);
+
+            setTimeout(() => {
+                document.getElementById('box-lid').classList.add('open');
+            }, 4800);
+
+            setTimeout(() => {
+                document.getElementById('cotton-cushion').classList.add('animate-in');
+            }, 5500);
+
+            // Staggered slot animations
+            setTimeout(() => {
+                document.getElementById('slot-container-1').classList.add('animate-in');
+            }, 6000);
+            setTimeout(() => {
+                document.getElementById('slot-container-2').classList.add('animate-in');
+            }, 6200);
+            setTimeout(() => {
+                document.getElementById('slot-container-3').classList.add('animate-in');
+            }, 6400);
+            setTimeout(() => {
+                document.getElementById('slot-container-4').classList.add('animate-in');
+            }, 6600);
+
+            setTimeout(() => {
+                document.getElementById('confirm-section').classList.add('animate-in');
+            }, 7000);
+
+            // Hide the lid after it opens
+            setTimeout(() => {
+                document.getElementById('box-lid').style.display = 'none';
+            }, 6500);
+        }
+
         function initSlot(slotId, items) {
             const slot = document.getElementById(slotId);
             const track = slot.querySelector('.slot-track');
             
-            // Create extended items for infinite scroll (items + items + items)
             const extendedItems = [...items, ...items, ...items];
             
             track.innerHTML = '';
@@ -464,7 +882,7 @@
                 track: track,
                 items: items,
                 extendedItems: extendedItems,
-                currentIndex: items.length, // Start at middle set
+                currentIndex: items.length,
                 offset: -items.length * itemHeight,
                 isDragging: false,
                 startY: 0,
@@ -502,11 +920,9 @@
             const slotData = slots[slotId];
             const itemsCount = slotData.items.length;
             
-            // Calculate which item we're closest to
             const rawIndex = Math.round(-slotData.offset / itemHeight);
             let newIndex = rawIndex;
             
-            // Handle infinite scroll boundaries
             if (newIndex < 1) {
                 newIndex += itemsCount;
                 slotData.offset -= itemsCount * itemHeight;
@@ -531,7 +947,6 @@
             const slotData = slots[slotId];
             const slot = slotData.element;
 
-            // Mouse events
             slot.addEventListener('mousedown', (e) => startDrag(slotId, e.clientY));
             document.addEventListener('mousemove', (e) => {
                 if (slots[slotId].isDragging) {
@@ -540,7 +955,6 @@
             });
             document.addEventListener('mouseup', () => endDrag(slotId));
 
-            // Touch events
             slot.addEventListener('touchstart', (e) => {
                 e.preventDefault();
                 startDrag(slotId, e.touches[0].clientY);
@@ -571,7 +985,6 @@
             slotData.offset = slotData.startOffset + deltaY;
             updateSlotPosition(slotId);
             
-            // Update current index based on position for visual feedback
             const rawIndex = Math.round(-slotData.offset / itemHeight);
             if (rawIndex !== slotData.currentIndex && rawIndex >= 0 && rawIndex < slotData.extendedItems.length) {
                 slotData.currentIndex = rawIndex;
@@ -595,6 +1008,20 @@
             return slotData.items[actualIndex];
         }
 
+        function createSparkles() {
+            const overlay = document.getElementById('closing-overlay');
+            for (let i = 0; i < 30; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.animationDelay = Math.random() * 2 + 's';
+                sparkle.style.width = (Math.random() * 8 + 4) + 'px';
+                sparkle.style.height = sparkle.style.width;
+                overlay.appendChild(sparkle);
+            }
+        }
+
         function confirmSelection() {
             const selectedItems = [
                 { slot: 'Bracelet 1', item: getSelectedItem('slot-bracelet1') },
@@ -603,35 +1030,114 @@
                 { slot: 'Necklace 2', item: getSelectedItem('slot-necklace2') }
             ];
 
-            const display = document.getElementById('selection-display');
-            const container = document.getElementById('selected-items');
-            const totalEl = document.getElementById('total-price');
+            // Show closing overlay
+            const closingOverlay = document.getElementById('closing-overlay');
+            closingOverlay.classList.add('active');
+            
+            createSparkles();
 
-            container.innerHTML = '';
-            let total = 0;
+            // Animate closing message
+            setTimeout(() => {
+                document.getElementById('closing-message').classList.add('show');
+            }, 500);
 
-            selectedItems.forEach(({ slot, item }) => {
-                total += item.price;
-                const card = document.createElement('div');
-                card.className = 'selected-item-card';
-                card.innerHTML = `
-                    <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/100x100/1a0a2e/d4af37?text=Jewelry'">
-                    <div class="item-name">${item.name}</div>
-                    <div class="item-price">$${item.price.toLocaleString()}</div>
-                `;
-                container.appendChild(card);
-            });
+            // Close the lid
+            setTimeout(() => {
+                document.getElementById('closing-lid').classList.add('close');
+            }, 1500);
 
-            totalEl.textContent = '$' + total.toLocaleString();
-            display.style.display = 'block';
-            display.scrollIntoView({ behavior: 'smooth' });
+            // Show ribbon
+            setTimeout(() => {
+                document.getElementById('gift-ribbon').classList.add('show');
+            }, 2500);
+
+            // Show selection display
+            setTimeout(() => {
+                const container = document.getElementById('selected-items');
+                const totalEl = document.getElementById('total-price').querySelector('span');
+
+                container.innerHTML = '';
+                let total = 0;
+
+                selectedItems.forEach(({ slot, item }, index) => {
+                    total += item.price;
+                    const card = document.createElement('div');
+                    card.className = 'selected-item-card';
+                    card.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/100x100/1a0a2e/d4af37?text=Jewelry'">
+                        <div class="card-name">${item.name}</div>
+                        <div class="card-price">$${item.price.toLocaleString()}</div>
+                    `;
+                    container.appendChild(card);
+
+                    // Staggered card animation
+                    setTimeout(() => {
+                        card.classList.add('show');
+                    }, index * 200);
+                });
+
+                totalEl.textContent = '$' + total.toLocaleString();
+                
+                document.getElementById('final-selection').classList.add('show');
+            }, 3500);
+
+            // Show total
+            setTimeout(() => {
+                document.getElementById('total-price').classList.add('show');
+            }, 4500);
+
+            // Show restart button
+            setTimeout(() => {
+                document.getElementById('restart-btn').classList.add('show');
+            }, 5000);
         }
 
-        // Initialize all slots
+        function restartExperience() {
+            // Reset all animations
+            document.getElementById('closing-overlay').classList.remove('active');
+            document.getElementById('closing-message').classList.remove('show');
+            document.getElementById('closing-lid').classList.remove('close');
+            document.getElementById('gift-ribbon').classList.remove('show');
+            document.getElementById('final-selection').classList.remove('show');
+            document.getElementById('total-price').classList.remove('show');
+            document.getElementById('restart-btn').classList.remove('show');
+
+            // Remove sparkles
+            document.querySelectorAll('.sparkle').forEach(s => s.remove());
+
+            // Reset main page
+            document.getElementById('opening-overlay').classList.remove('fade-out');
+            document.getElementById('main-title').classList.remove('animate-in');
+            document.getElementById('jewelry-box').classList.remove('animate-in');
+            document.getElementById('box-lid').classList.remove('open');
+            document.getElementById('box-lid').style.display = 'block';
+            document.getElementById('cotton-cushion').classList.remove('animate-in');
+            document.getElementById('slot-container-1').classList.remove('animate-in');
+            document.getElementById('slot-container-2').classList.remove('animate-in');
+            document.getElementById('slot-container-3').classList.remove('animate-in');
+            document.getElementById('slot-container-4').classList.remove('animate-in');
+            document.getElementById('confirm-section').classList.remove('animate-in');
+
+            // Reinitialize slots
+            initSlot('slot-bracelet1', bracelets);
+            initSlot('slot-necklace1', necklaces);
+            initSlot('slot-bracelet2', bracelets);
+            initSlot('slot-necklace2', necklaces);
+
+            // Play opening animation again
+            setTimeout(() => {
+                playOpeningAnimation();
+            }, 500);
+        }
+
+        // Initialize
         initSlot('slot-bracelet1', bracelets);
         initSlot('slot-necklace1', necklaces);
         initSlot('slot-bracelet2', bracelets);
         initSlot('slot-necklace2', necklaces);
+
+        // Start opening animation
+        playOpeningAnimation();
     </script>
 </body>
 </html>
