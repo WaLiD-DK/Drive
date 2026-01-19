@@ -288,6 +288,9 @@ body {
 /* Ping animation on selection change */
 .jewelry-item.ping {
     animation: ping 1s cubic-bezier(0, 0, 0.2, 1);
+    border: 3px solid #d4af37;
+    border-radius: 6px;
+    background: transparent;
 }
 
 @keyframes ping {
@@ -295,18 +298,6 @@ body {
         transform: scale(1.2);
         opacity: 0;
     }
-}
-
-.jewelry-item.ping::after {
-    content: '';
-    position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
-    border: 3px solid #d4af37;
-    border-radius: 6px;
-    animation: ping 1s cubic-bezier(0, 0, 0.2, 1);
 }
 
 /* Tooltip */

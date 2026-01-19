@@ -9,6 +9,7 @@ let velocity = 0;
 let momentumAnimation = null;
 let currentColumn = null;
 let tooltipTimeout = null;
+let scrollTimeouts = new WeakMap(); // Track scroll timeouts per column
 
 // Constants
 const SNAP_THRESHOLD = 100;
@@ -16,7 +17,8 @@ const VELOCITY_MULTIPLIER = 0.95;
 const MIN_VELOCITY = 0.5;
 const RUBBER_BAND_RESISTANCE = 0.3;
 const TOOLTIP_DELAY = 500;
-const FPS_NORMALIZATION = 16;
+const TARGET_FPS = 60;
+const FPS_NORMALIZATION = 1000 / TARGET_FPS; // Convert ms to frame time
 const INITIALIZATION_DELAY = 100;
 const SNAP_UPDATE_DELAY = 300;
 const PULSE_DURATION = 600;
@@ -108,17 +110,21 @@ function initializeColumns() {
         container.addEventListener('touchend', handleDragEnd);
         container.addEventListener('touchcancel', handleDragEnd);
         
-        // Scroll event (throttled)
-        let scrollTimeout;
+        // Scroll event (throttled per column)
         container.addEventListener('scroll', () => {
             container.classList.add('scrolling');
             
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
+            const existingTimeout = scrollTimeouts.get(container);
+            if (existingTimeout) {
+                clearTimeout(existingTimeout);
+            }
+            
+            const newTimeout = setTimeout(() => {
                 container.classList.remove('scrolling');
                 updateActiveItem(column);
             }, SCROLL_THROTTLE_DELAY);
             
+            scrollTimeouts.set(container, newTimeout);
             updateActiveItem(column);
         });
         
@@ -360,11 +366,15 @@ function selectItem(item, column) {
         item.classList.add('pulse');
         setTimeout(() => item.classList.remove('pulse'), PULSE_DURATION);
         
-        // Add ping animation effect
-        const pingElement = item.cloneNode(true);
-        pingElement.classList.add('ping');
+        // Add ping animation effect (using lightweight approach)
+        const pingElement = document.createElement('div');
+        pingElement.className = 'jewelry-item ping';
         pingElement.style.position = 'absolute';
         pingElement.style.pointerEvents = 'none';
+        pingElement.style.top = item.offsetTop + 'px';
+        pingElement.style.left = item.offsetLeft + 'px';
+        pingElement.style.width = item.offsetWidth + 'px';
+        pingElement.style.height = item.offsetHeight + 'px';
         item.parentElement.appendChild(pingElement);
         setTimeout(() => pingElement.remove(), PING_DURATION);
         
