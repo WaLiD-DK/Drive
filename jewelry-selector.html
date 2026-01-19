@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Jewelry Selector</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a0a2e 0%, #16213e 50%, #0f0f23 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: #d4af37;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 3px;
+        }
+
+        .jewelry-box {
+            background: linear-gradient(145deg, #2c1810 0%, #1a0f0a 50%, #0d0805 100%);
+            border-radius: 20px;
+            padding: 40px 50px;
+            box-shadow: 
+                0 25px 60px rgba(0,0,0,0.6),
+                inset 0 2px 4px rgba(255,255,255,0.1),
+                inset 0 -2px 4px rgba(0,0,0,0.3);
+            border: 3px solid #3d2817;
+            position: relative;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .jewelry-box::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 15px;
+            pointer-events: none;
+        }
+
+        .box-lid-detail {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 30px;
+            background: linear-gradient(180deg, #d4af37 0%, #b8860b 100%);
+            border-radius: 5px 5px 0 0;
+            box-shadow: 0 -5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .cotton-cushion {
+            background: linear-gradient(180deg, #f5f0e6 0%, #e8e0d0 50%, #d9d0c0 100%);
+            border-radius: 15px;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            box-shadow: 
+                inset 0 5px 15px rgba(0,0,0,0.1),
+                inset 0 -3px 10px rgba(255,255,255,0.5);
+            position: relative;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(200,190,175,0.3) 2px,
+                    rgba(200,190,175,0.3) 4px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(200,190,175,0.2) 2px,
+                    rgba(200,190,175,0.2) 4px
+                );
+        }
+
+        .slot-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .slot-label {
+            font-family: 'Playfair Display', serif;
+            color: #5a4a3a;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .slot {
+            width: 160px;
+            height: 280px;
+            background: linear-gradient(180deg, #f8f4ec 0%, #f0ebe0 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            cursor: grab;
+            box-shadow: 
+                inset 0 3px 10px rgba(0,0,0,0.15),
+                0 4px 8px rgba(0,0,0,0.1);
+            border: 2px solid rgba(180,160,140,0.3);
+        }
+
+        .slot:active {
+            cursor: grabbing;
+        }
+
+        .slot-track {
+            position: absolute;
+            width: 100%;
+            transition: transform 0.3s ease-out;
+        }
+
+        .slot-item {
+            height: 93.33px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            transition: all 0.3s ease-out;
+        }
+
+        .slot-item.above,
+        .slot-item.below {
+            opacity: 0.3;
+            filter: blur(1px);
+            transform: scale(0.85);
+        }
+
+        .slot-item.selected {
+            opacity: 1;
+            filter: blur(0);
+            transform: scale(1.15);
+            z-index: 10;
+        }
+
+        .slot-item img {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            margin-bottom: 5px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .slot-item.selected img {
+            width: 80px;
+            height: 80px;
+        }
+
+        .item-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.7rem;
+            color: #3a3a3a;
+            text-align: center;
+            font-weight: 500;
+            line-height: 1.2;
+        }
+
+        .slot-item.selected .item-name {
+            font-size: 0.8rem;
+        }
+
+        .item-price {
+            font-size: 0.65rem;
+            color: #b8860b;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .slot-item.selected .item-price {
+            font-size: 0.75rem;
+        }
+
+        .slot-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            background: linear-gradient(
+                180deg,
+                rgba(248,244,236,0.9) 0%,
+                transparent 25%,
+                transparent 75%,
+                rgba(248,244,236,0.9) 100%
+            );
+        }
+
+        .confirm-section {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .confirm-btn {
+            background: linear-gradient(180deg, #d4af37 0%, #b8860b 50%, #a67c00 100%);
+            color: #1a0a2e;
+            border: none;
+            padding: 18px 50px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 8px 25px rgba(212, 175, 55, 0.4),
+                inset 0 2px 4px rgba(255,255,255,0.3);
+        }
+
+        .confirm-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 35px rgba(212, 175, 55, 0.5),
+                inset 0 2px 4px rgba(255,255,255,0.4);
+            background: linear-gradient(180deg, #e5c04a 0%, #c9971c 50%, #b8860b 100%);
+        }
+
+        .confirm-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .selection-display {
+            margin-top: 30px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .selection-title {
+            font-family: 'Playfair Display', serif;
+            color: #d4af37;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .selected-items {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .selected-item-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            min-width: 150px;
+            transition: all 0.3s ease;
+        }
+
+        .selected-item-card:hover {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .selected-item-card img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+        }
+
+        .selected-item-card .item-name {
+            color: #f0ebe0;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .selected-item-card .item-price {
+            color: #d4af37;
+            font-size: 0.85rem;
+        }
+
+        .total-price {
+            margin-top: 20px;
+            font-family: 'Playfair Display', serif;
+            color: #d4af37;
+            font-size: 1.5rem;
+        }
+
+        .total-price span {
+            color: #f0ebe0;
+        }
+
+        @media (max-width: 768px) {
+            .cotton-cushion {
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+
+            .slot {
+                width: 140px;
+                height: 250px;
+            }
+
+            .slot-item {
+                height: 83.33px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .jewelry-box {
+                padding: 30px 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cotton-cushion {
+                gap: 15px;
+            }
+
+            .slot {
+                width: 120px;
+                height: 220px;
+            }
+
+            .slot-item {
+                height: 73.33px;
+            }
+
+            .slot-item img {
+                width: 50px;
+                height: 50px;
+            }
+
+            .slot-item.selected img {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>✦ Luxury Jewelry Collection ✦</h1>
+
+    <div class="jewelry-box">
+        <div class="box-lid-detail"></div>
+        <div class="cotton-cushion">
+            <div class="slot-container">
+                <div class="slot-label">Bracelet 1</div>
+                <div class="slot" id="slot-bracelet1" data-type="bracelet">
+                    <div class="slot-track"></div>
+                    <div class="slot-overlay"></div>
+                </div>
+            </div>
+            <div class="slot-container">
+                <div class="slot-label">Necklace 1</div>
+                <div class="slot" id="slot-necklace1" data-type="necklace">
+                    <div class="slot-track"></div>
+                    <div class="slot-overlay"></div>
+                </div>
+            </div>
+            <div class="slot-container">
+                <div class="slot-label">Bracelet 2</div>
+                <div class="slot" id="slot-bracelet2" data-type="bracelet">
+                    <div class="slot-track"></div>
+                    <div class="slot-overlay"></div>
+                </div>
+            </div>
+            <div class="slot-container">
+                <div class="slot-label">Necklace 2</div>
+                <div class="slot" id="slot-necklace2" data-type="necklace">
+                    <div class="slot-track"></div>
+                    <div class="slot-overlay"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="confirm-section">
+        <button class="confirm-btn" onclick="confirmSelection()">✦ Confirm Selection ✦</button>
+    </div>
+
+    <div class="selection-display" id="selection-display" style="display: none;">
+        <div class="selection-title">Your Selected Pieces</div>
+        <div class="selected-items" id="selected-items"></div>
+        <div class="total-price">Total: <span id="total-price">$0</span></div>
+    </div>
+
+    <script>
+        const bracelets = [
+            { name: "Diamond Tennis Bracelet", price: 4500, image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=200&h=200&fit=crop" },
+            { name: "Gold Chain Bracelet", price: 1800, image: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=200&h=200&fit=crop" },
+            { name: "Pearl Strand Bracelet", price: 950, image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=200&h=200&fit=crop" },
+            { name: "Sapphire Bangle", price: 3200, image: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=200&h=200&fit=crop" },
+            { name: "Rose Gold Cuff", price: 2100, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=200&h=200&fit=crop" }
+        ];
+
+        const necklaces = [
+            { name: "Diamond Pendant", price: 5800, image: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=200&h=200&fit=crop" },
+            { name: "Pearl Choker", price: 2400, image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=200&h=200&fit=crop" },
+            { name: "Gold Layered Chain", price: 1600, image: "https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=200&h=200&fit=crop" },
+            { name: "Emerald Drop Necklace", price: 7200, image: "https://images.unsplash.com/photo-1602752250015-52934bc45613?w=200&h=200&fit=crop" },
+            { name: "Ruby Heart Pendant", price: 4100, image: "https://images.unsplash.com/photo-1598560917505-59a3ad559071?w=200&h=200&fit=crop" }
+        ];
+
+        const slots = {};
+        const itemHeight = 93.33;
+
+        function initSlot(slotId, items) {
+            const slot = document.getElementById(slotId);
+            const track = slot.querySelector('.slot-track');
+            
+            // Create extended items for infinite scroll (items + items + items)
+            const extendedItems = [...items, ...items, ...items];
+            
+            track.innerHTML = '';
+            extendedItems.forEach((item, index) => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'slot-item';
+                itemEl.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/100x100/f5f0e6/b8860b?text=Jewelry'">
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">$${item.price.toLocaleString()}</div>
+                `;
+                track.appendChild(itemEl);
+            });
+
+            slots[slotId] = {
+                element: slot,
+                track: track,
+                items: items,
+                extendedItems: extendedItems,
+                currentIndex: items.length, // Start at middle set
+                offset: -items.length * itemHeight,
+                isDragging: false,
+                startY: 0,
+                startOffset: 0
+            };
+
+            updateSlotPosition(slotId);
+            updateItemStyles(slotId);
+            addSlotInteraction(slotId);
+        }
+
+        function updateSlotPosition(slotId) {
+            const slotData = slots[slotId];
+            slotData.track.style.transform = `translateY(${slotData.offset + itemHeight}px)`;
+        }
+
+        function updateItemStyles(slotId) {
+            const slotData = slots[slotId];
+            const items = slotData.track.querySelectorAll('.slot-item');
+            
+            items.forEach((item, index) => {
+                item.classList.remove('above', 'selected', 'below');
+                
+                if (index === slotData.currentIndex - 1) {
+                    item.classList.add('above');
+                } else if (index === slotData.currentIndex) {
+                    item.classList.add('selected');
+                } else if (index === slotData.currentIndex + 1) {
+                    item.classList.add('below');
+                }
+            });
+        }
+
+        function snapToNearest(slotId) {
+            const slotData = slots[slotId];
+            const itemsCount = slotData.items.length;
+            
+            // Calculate which item we're closest to
+            const rawIndex = Math.round(-slotData.offset / itemHeight);
+            let newIndex = rawIndex;
+            
+            // Handle infinite scroll boundaries
+            if (newIndex < 1) {
+                newIndex += itemsCount;
+                slotData.offset -= itemsCount * itemHeight;
+            } else if (newIndex >= itemsCount * 2 + 1) {
+                newIndex -= itemsCount;
+                slotData.offset += itemsCount * itemHeight;
+            }
+            
+            slotData.currentIndex = newIndex;
+            slotData.offset = -newIndex * itemHeight;
+            
+            slotData.track.style.transition = 'transform 0.3s ease-out';
+            updateSlotPosition(slotId);
+            updateItemStyles(slotId);
+            
+            setTimeout(() => {
+                slotData.track.style.transition = 'none';
+            }, 300);
+        }
+
+        function addSlotInteraction(slotId) {
+            const slotData = slots[slotId];
+            const slot = slotData.element;
+
+            // Mouse events
+            slot.addEventListener('mousedown', (e) => startDrag(slotId, e.clientY));
+            document.addEventListener('mousemove', (e) => {
+                if (slots[slotId].isDragging) {
+                    drag(slotId, e.clientY);
+                }
+            });
+            document.addEventListener('mouseup', () => endDrag(slotId));
+
+            // Touch events
+            slot.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                startDrag(slotId, e.touches[0].clientY);
+            });
+            slot.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                if (slots[slotId].isDragging) {
+                    drag(slotId, e.touches[0].clientY);
+                }
+            });
+            slot.addEventListener('touchend', () => endDrag(slotId));
+        }
+
+        function startDrag(slotId, clientY) {
+            const slotData = slots[slotId];
+            slotData.isDragging = true;
+            slotData.startY = clientY;
+            slotData.startOffset = slotData.offset;
+            slotData.track.style.transition = 'none';
+            slotData.element.style.cursor = 'grabbing';
+        }
+
+        function drag(slotId, clientY) {
+            const slotData = slots[slotId];
+            if (!slotData.isDragging) return;
+            
+            const deltaY = clientY - slotData.startY;
+            slotData.offset = slotData.startOffset + deltaY;
+            updateSlotPosition(slotId);
+            
+            // Update current index based on position for visual feedback
+            const rawIndex = Math.round(-slotData.offset / itemHeight);
+            if (rawIndex !== slotData.currentIndex && rawIndex >= 0 && rawIndex < slotData.extendedItems.length) {
+                slotData.currentIndex = rawIndex;
+                updateItemStyles(slotId);
+            }
+        }
+
+        function endDrag(slotId) {
+            const slotData = slots[slotId];
+            if (!slotData.isDragging) return;
+            
+            slotData.isDragging = false;
+            slotData.element.style.cursor = 'grab';
+            snapToNearest(slotId);
+        }
+
+        function getSelectedItem(slotId) {
+            const slotData = slots[slotId];
+            const itemsCount = slotData.items.length;
+            const actualIndex = slotData.currentIndex % itemsCount;
+            return slotData.items[actualIndex];
+        }
+
+        function confirmSelection() {
+            const selectedItems = [
+                { slot: 'Bracelet 1', item: getSelectedItem('slot-bracelet1') },
+                { slot: 'Necklace 1', item: getSelectedItem('slot-necklace1') },
+                { slot: 'Bracelet 2', item: getSelectedItem('slot-bracelet2') },
+                { slot: 'Necklace 2', item: getSelectedItem('slot-necklace2') }
+            ];
+
+            const display = document.getElementById('selection-display');
+            const container = document.getElementById('selected-items');
+            const totalEl = document.getElementById('total-price');
+
+            container.innerHTML = '';
+            let total = 0;
+
+            selectedItems.forEach(({ slot, item }) => {
+                total += item.price;
+                const card = document.createElement('div');
+                card.className = 'selected-item-card';
+                card.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/100x100/1a0a2e/d4af37?text=Jewelry'">
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">$${item.price.toLocaleString()}</div>
+                `;
+                container.appendChild(card);
+            });
+
+            totalEl.textContent = '$' + total.toLocaleString();
+            display.style.display = 'block';
+            display.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Initialize all slots
+        initSlot('slot-bracelet1', bracelets);
+        initSlot('slot-necklace1', necklaces);
+        initSlot('slot-bracelet2', bracelets);
+        initSlot('slot-necklace2', necklaces);
+    </script>
+</body>
+</html>
