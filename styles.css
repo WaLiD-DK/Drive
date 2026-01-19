@@ -1,0 +1,409 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Georgia', serif;
+    background: linear-gradient(135deg, #2c1810 0%, #1a0f0a 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.scene-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    padding: 40px 20px;
+}
+
+/* Jewelry Box - Scaled to 630px × 448px (40% increase from 450px × 320px) */
+.jewelry-box {
+    width: 630px;
+    height: 448px;
+    margin: 0 auto;
+    position: relative;
+    background: linear-gradient(145deg, #6b3410 0%, #4a2408 50%, #2d1505 100%);
+    border-radius: 12px;
+    box-shadow: 
+        0 28px 56px rgba(0, 0, 0, 0.6),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    transform-style: preserve-3d;
+    perspective: 1400px;
+}
+
+/* Mahogany wood texture effect */
+.jewelry-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 3px,
+            rgba(0, 0, 0, 0.1) 3px,
+            rgba(0, 0, 0, 0.1) 4px
+        ),
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(139, 69, 19, 0.2) 2px,
+            rgba(139, 69, 19, 0.2) 3px
+        );
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+/* Box lid */
+.box-lid {
+    position: absolute;
+    top: -8px;
+    left: 0;
+    right: 0;
+    height: 28px;
+    background: linear-gradient(145deg, #8b4513 0%, #5c2e0a 100%);
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    z-index: 10;
+}
+
+/* Box interior */
+.box-interior {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 28px;
+    display: flex;
+    gap: 14px;
+    z-index: 1;
+}
+
+/* Velvet lining */
+.velvet-lining {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, #2d1a3d 0%, #1a0f28 100%);
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.velvet-lining::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 1px,
+            rgba(255, 255, 255, 0.02) 1px,
+            rgba(255, 255, 255, 0.02) 2px
+        );
+}
+
+/* Particle canvas */
+.particle-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Jewelry columns */
+.jewelry-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: rgba(20, 10, 30, 0.4);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.column-label {
+    padding: 12px 8px;
+    text-align: center;
+    color: #d4af37;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    user-select: none;
+}
+
+.items-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 8px;
+    position: relative;
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+.items-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.items-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.items-container::-webkit-scrollbar-thumb {
+    background: rgba(212, 175, 55, 0.4);
+    border-radius: 3px;
+}
+
+.items-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(212, 175, 55, 0.6);
+}
+
+/* Jewelry items */
+.jewelry-item {
+    padding: 16px 8px;
+    margin-bottom: 8px;
+    background: rgba(50, 30, 70, 0.5);
+    border: 2px solid rgba(255, 215, 0, 0.2);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    text-align: center;
+    user-select: none;
+}
+
+.jewelry-item .item-image {
+    font-size: 32px;
+    margin-bottom: 8px;
+    filter: grayscale(0.3);
+    transition: filter 0.3s ease;
+}
+
+.jewelry-item .item-name {
+    color: #e8d7c3;
+    font-size: 11px;
+    line-height: 1.2;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Hover effect */
+.jewelry-item:hover {
+    transform: scale(1.05);
+    border-color: rgba(255, 215, 0, 0.5);
+    background: rgba(70, 40, 90, 0.6);
+    z-index: 10;
+}
+
+.jewelry-item:hover .item-image {
+    filter: grayscale(0);
+}
+
+/* Active item (in center view) */
+.jewelry-item.active {
+    border-color: rgba(255, 215, 0, 0.6);
+    background: rgba(80, 50, 100, 0.7);
+    transform: scale(1.08);
+    filter: blur(0);
+    z-index: 15;
+    will-change: transform, filter;
+}
+
+.jewelry-item.active .item-image {
+    filter: grayscale(0) drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+}
+
+/* Inactive items (slightly blurred) */
+.jewelry-item.inactive {
+    filter: blur(0.5px);
+    opacity: 0.7;
+    transform: scale(0.95);
+}
+
+/* Selected item (with gold border and glow) */
+.jewelry-item.selected {
+    border: 3px solid #d4af37;
+    box-shadow: 
+        0 0 16px rgba(212, 175, 55, 0.6),
+        inset 0 0 8px rgba(212, 175, 55, 0.3);
+    background: rgba(100, 60, 120, 0.8);
+    animation: selectedGlow 2s ease-in-out infinite;
+}
+
+@keyframes selectedGlow {
+    0%, 100% {
+        box-shadow: 
+            0 0 16px rgba(212, 175, 55, 0.6),
+            inset 0 0 8px rgba(212, 175, 55, 0.3);
+    }
+    50% {
+        box-shadow: 
+            0 0 24px rgba(212, 175, 55, 0.8),
+            inset 0 0 12px rgba(212, 175, 55, 0.5);
+    }
+}
+
+/* Pulse animation on click */
+.jewelry-item.pulse {
+    animation: pulse 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+    100% {
+        transform: scale(1.08);
+    }
+}
+
+/* Ping animation on selection change */
+.jewelry-item.ping {
+    animation: ping 1s cubic-bezier(0, 0, 0.2, 1);
+}
+
+@keyframes ping {
+    75%, 100% {
+        transform: scale(1.2);
+        opacity: 0;
+    }
+}
+
+.jewelry-item.ping::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border: 3px solid #d4af37;
+    border-radius: 6px;
+    animation: ping 1s cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Tooltip */
+.tooltip {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.9);
+    color: #d4af37;
+    padding: 12px 16px;
+    border-radius: 6px;
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    font-size: 13px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+    max-width: 250px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+.tooltip.visible {
+    opacity: 1;
+}
+
+/* Confirm button */
+.confirm-button {
+    display: block;
+    margin: 32px auto 0;
+    padding: 16px 48px;
+    background: linear-gradient(135deg, #d4af37 0%, #aa8a2e 100%);
+    color: #1a0f0a;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+    text-transform: uppercase;
+}
+
+.confirm-button:hover:not(:disabled) {
+    background: linear-gradient(135deg, #e5c048 0%, #bb9b3f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(212, 175, 55, 0.6);
+}
+
+.confirm-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.confirm-button:disabled {
+    background: linear-gradient(135deg, #666 0%, #444 100%);
+    color: #999;
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .jewelry-box {
+        width: 90vw;
+        height: calc(90vw * 0.711); /* Maintain 630:448 aspect ratio */
+        max-width: 630px;
+        max-height: 448px;
+    }
+    
+    .box-interior {
+        padding: 20px;
+        gap: 10px;
+    }
+    
+    .column-label {
+        font-size: 11px;
+        padding: 8px 4px;
+    }
+    
+    .jewelry-item {
+        padding: 12px 4px;
+    }
+    
+    .jewelry-item .item-image {
+        font-size: 24px;
+    }
+    
+    .jewelry-item .item-name {
+        font-size: 9px;
+    }
+    
+    .confirm-button {
+        padding: 12px 32px;
+        font-size: 14px;
+    }
+}
+
+/* Performance optimization */
+.items-container.scrolling .jewelry-item {
+    will-change: transform, filter, opacity;
+}
